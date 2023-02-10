@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# default size is 100GB if not specified as command line arg
 SIZE=${1:-100}
 INSTANCEID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
 VOLUMEID=$(aws ec2 describe-instances \
@@ -14,6 +16,7 @@ while [ \
     --output text)" != "1" ]; do
 sleep 1
 done
+
 if [ $(readlink -f /dev/xvda) = "/dev/xvda" ]
 then
   sudo growpart /dev/xvda 1
