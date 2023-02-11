@@ -47,7 +47,7 @@ python3 -m pip install --user virtualenv
 python3 -m virtualenv --python=<path-to-Python3.7> .devops
 source .devops/bin/activate
 ```
-> Alternatively, you could setup the virtualenv via `make setup`. [this] is is from a directive in `Makefile`.
+> Alternatively, you could setup the virtualenv via `make setup`. [this] is from a directive in `Makefile`.
 
 - Run `make install` to install the necessary dependencies. This will install all relevant pip packages for the project.
 
