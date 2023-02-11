@@ -1,4 +1,4 @@
-# Operationalize a Machine Learning Microservice API
+# Operationalize a Machine Learning Microservice API - Kubernetes
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/janymuong/ml-microservice-api-k8s/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/janymuong/ml-microservice-api-k8s/tree/main)
 
@@ -69,7 +69,7 @@ source .devops/bin/activate
 ## Appendix
 This holds information for some highlighted regular files & directory files in the root project repository.
 ### File Info:
-- [.circleci/config](./circleci/config) - Configuration file for CircleCI CI/CD tooling.
+- [.circleci/config](./.circleci/config) - Configuration file for CircleCI CI/CD tooling.
 - [scikit learn data](./model_data) - Dataset for ML model.
 - [output texts](./output_txt_files) - Text output from CLI/shell commnds and/or scripts run against containers and clusters.
 - [Flask application](./app.py) - The python application that serves out API calls to the model.
