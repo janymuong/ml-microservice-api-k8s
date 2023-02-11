@@ -1,14 +1,17 @@
-# Operationalize a Machine Learning Microservice API - Kubernetes
+# Operationalize a Machine Learning Microservice API
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/janymuong/ml-microservice-api-k8s/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/janymuong/ml-microservice-api-k8s/tree/main)
 
 ## Project Overview
 
 ```Cloud DevOps Engineering```
-The premise and first instruction is - operationalizing a Machine Learning Microservice API. 
 
-The entire project is based on a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). 
-This is a `Python and flaskk implementation`- flask app :`app.py` that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+The premise and first instruction is - operationalizing a Machine Learning Microservice API with `Kubernetes`. 
+
+The entire project is based on a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing).
+
+This is a `Python and flaskk implementation`. The application `app.py` serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+
 
 ### Project Tasks
 
@@ -29,8 +32,8 @@ You can find a detailed [project rubric, here](https://review.udacity.com/#!/rub
 > **Note**: The final implementation of the project will showcase abilities to operationalize production microservices.
 
 
----
 
+---
 ## Setup the Environment
 
 `Virtual Environment` - It's recommended to leverage a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virual environment for your platform can be found in the python docs [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
@@ -44,7 +47,7 @@ python3 -m pip install --user virtualenv
 python3 -m virtualenv --python=<path-to-Python3.7> .devops
 source .devops/bin/activate
 ```
-> Alternatively, you could setup the virtualenv via `make setup`. [this] is is fom a directive in `Makefile`.
+> Alternatively, you could setup the virtualenv via `make setup`. [this] is is from a directive in `Makefile`.
 
 - Run `make install` to install the necessary dependencies. This will install all relevant pip packages for the project.
 
@@ -60,6 +63,7 @@ source .devops/bin/activate
 - Setup and Configure Kubernetes locally
 - Create Flask app in Container
 - Run via kubectl
+
 
 ---
 ## Appendix
