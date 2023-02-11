@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 # This file tags and uploads an image to Docker Hub
 
-# Assumes that an image is built via `run_docker.sh`
+# assumes that an image is built via `run_docker.sh`
 
-# Step 1:
 # Create dockerpath
-# dockerpath=<your docker ID/path>
+dockerpath=janymuong/mlapiscikit
 
-# Step 2:  
 # Authenticate & tag
 echo "Docker ID and Image: $dockerpath"
+docker login
+docker tag mlapiscikit $dockerpath:latest
 
-# Step 3:
 # Push image to a docker repository
+docker push $dockerpath:latest
+
+# this bash script simulates this manual steps:
+# docker login
+# docker tag mlapiscikit janymuong/mlapiscikit:latest
+# docker push janymuong/mlapiscikit:latest
