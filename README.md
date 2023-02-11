@@ -68,7 +68,7 @@ source .devops/bin/activate
 ---
 ## Appendix
 This holds information for some highlighted regular files & directory files in the root project repository.
-#### **file info**:
+### File Info:
 - [.circleci/config](./.circleci/config) - Configuration file for CircleCI CI/CD tooling.
 - [scikit learn data](./model_data) - Dataset for ML model.
 - [output texts](./output_txt_files) - Text output from CLI/shell commnds and/or scripts run against containers and clusters.
@@ -78,7 +78,7 @@ This holds information for some highlighted regular files & directory files in t
 - [requirements.txt](./requirements.txt) - File for `pip` packages/dependencies.
 
 
-#### **helper scripts**:
+### Helper Scripts:
 `make_prediction.sh` `run_docker.sh` `run_kubernetes.sh` `upload_docker.sh` - These are bash scripts that you can use in place of multiple/chained shell commands.
 
 `resize.sh` - A bash script to resize an `AWS Cloud9` environment, if one opts to use a virtual machine for flexible setup.
