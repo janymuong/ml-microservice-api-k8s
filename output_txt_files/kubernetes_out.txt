@@ -1,1 +1,18 @@
-<paste log output from Kubernetes-mediated prediction, here>
+(.devops) voclabs:~/environment/ml-microservice-api-k8s (main) $ bash run_kubernetes.sh
+Error from server (AlreadyExists): pods "mlapiscikit" already exists
+NAME          READY   STATUS    RESTARTS   AGE
+mlapiscikit   1/1     Running   0          18m
+Forwarding from 127.0.0.1:8000 -> 80
+Forwarding from [::1]:8000 -> 80
+Handling connection for 8000
+
+
+# make prediction 'out' from separate terminal
+(.devops) voclabs:~/environment/ml-microservice-api-k8s (main) $ bash make_prediction.sh 
+Port: 8000
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) voclabs:~/environment/ml-microservice-api-k8s (main) $ 
