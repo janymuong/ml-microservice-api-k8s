@@ -87,4 +87,4 @@ These are bash scripts that you can use in place of multiple/chained shell comma
 `resize.sh` - A bash script to resize an `AWS Cloud9` environment, if one opts to use a virtual machine for a flexible setup. 
 > usage: run this in the terminal: `bash resize.sh intended_cloud9_volume_size` - size in Gigabytes.
 >
-> running `bash resize.sh` uses 100GB by default.
+> running `bash resize.sh` uses 100GB by [default](./resize.sh).
