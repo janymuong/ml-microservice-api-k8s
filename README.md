@@ -2,6 +2,7 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/janymuong/ml-microservice-api-k8s/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/janymuong/ml-microservice-api-k8s/tree/main)
 
+
 ## Project Overview
 
 ```Cloud DevOps Engineering```
@@ -36,15 +37,14 @@ You can find a detailed [project rubric, here](https://review.udacity.com/#!/rub
 ---
 ## Setup the Environment
 
-`Virtual Environment` - It's recommended to leverage a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virual environment for your platform can be found in the python docs [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+`Virtual Environments` - It's recommended to leverage a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virtual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
 
-- Create a siloed virtual environment with Python 3.7 and **activate** it:
+- Create a siloed virtual environment with Python 3.7 and **activate** it. You should have Python 3.7 available in your host/local machine. 
+Check the Python path using `which python3`
 ```bash
-python3 -m pip install --user virtualenv
-# You should have Python 3.7 available in your host. 
-# Check the Python path using `which python3`
-# Use a command similar to this one:
-python3 -m virtualenv --python=<path-to-Python3.7> .devops
+python3 -m pip install --user virtualenv 
+# use a command similar to this one to create environment:
+python3 -m virtualenv --python=<path-to-python3.7> .devops
 source .devops/bin/activate
 ```
 > Alternatively, you could setup the virtualenv via `make setup`. [this] is from a directive in `Makefile`.
@@ -69,7 +69,7 @@ source .devops/bin/activate
 ## Appendix
 This holds information for some highlighted regular files & directory files in the root project repository.
 ### File Info:
-- [.circleci/config](./.circleci/config) - Configuration file for CircleCI CI/CD tooling.
+- [.circleci/config](./.circleci/config.yml) - Configuration file for CircleCI CI/CD tooling.
 - [scikit learn data](./model_data) - Dataset for ML model.
 - [output texts](./output_txt_files) - Text output from CLI/shell commnds and/or scripts run against containers and clusters.
 - [Flask application](./app.py) - The python application that serves out API calls to the model.
@@ -79,6 +79,8 @@ This holds information for some highlighted regular files & directory files in t
 
 
 ### Helper Scripts:
-`make_prediction.sh` `run_docker.sh` `run_kubernetes.sh` `upload_docker.sh` - These are bash scripts that you can use in place of multiple/chained shell commands.
+`make_prediction.sh` `run_docker.sh` `run_kubernetes.sh` `upload_docker.sh`
+These are bash scripts that you can use in place of multiple/chained shell commands. The scripts do exactly what you think they do.
 
-`resize.sh` - A bash script to resize an `AWS Cloud9` environment, if one opts to use a virtual machine for flexible setup.
+`resize.sh` - A bash script to resize an `AWS Cloud9` environment, if one opts to use a virtual machine for flexible setup. 
+> usage - run this in the terminal: `bash resize.sh intended_cloud9_volume`
