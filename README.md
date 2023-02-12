@@ -69,7 +69,7 @@ source .devops/bin/activate
 ## Appendix
 This holds information for some highlighted regular files & directory files in the root project repository.
 
-### `appendix a`: File Info:
+### `appendix a`- File Info:
 - [.circleci/config](./.circleci/config.yml) - Configuration file for CircleCI CI/CD tooling.
 - [model_data](./model_data) - Scikit Learn Dataset for the ML model.
 - [output_txt_files](./output_txt_files) - Text output from CLI/shell commnds and/or scripts run against containers and clusters.
@@ -79,10 +79,11 @@ This holds information for some highlighted regular files & directory files in t
 - [requirements.txt](./requirements.txt) - File for `pip` packages/dependencies.
 
 
-### `appendix b`: Helper Scripts:
+### `appendix b`- Helper Scripts:
 `make_prediction.sh` `run_docker.sh` `run_kubernetes.sh` `upload_docker.sh`
 These are bash scripts that you can use in place of multiple/chained shell commands. The scripts do exactly what you think they do.
 
 `resize.sh` - A bash script to resize an `AWS Cloud9` environment, if one opts to use a virtual machine for a flexible setup. 
 > usage: run this in the terminal: `bash resize.sh intended_cloud9_volume_size` - size in Gigabytes.
+>
 > running `bash resize.sh` uses 100GB by default.
