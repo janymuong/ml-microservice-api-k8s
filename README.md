@@ -30,7 +30,7 @@ The project tasks are listed out below:
 You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/2576/view).
 
 
-> **Note**:
+> **Note**  
 > The final implementation of the project will showcase abilities to operationalize production microservices.
 
 
