@@ -82,7 +82,7 @@ This holds information for some highlighted regular files & directory files in t
 
 ### `appendix b` - Helper Scripts:
 `make_prediction.sh` `run_docker.sh` `run_kubernetes.sh` `upload_docker.sh`     
-These are bash scripts that you can use in place of multiple/chained shell commands. The scripts do exactly what you think they do.
+These are bash scripts that you can use in place of multiple/chained shell commands.
 
 `resize.sh` - A bash script to resize an `AWS Cloud9` environment, if one opts to use a virtual machine for a flexible setup. 
 > usage: run this in the terminal: `bash resize.sh intended_cloud9_volume_size` - size in Gigabytes.
