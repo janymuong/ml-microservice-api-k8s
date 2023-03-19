@@ -1,13 +1,21 @@
 #!/bin/bash
 
-# default size is 100GB if not specified as command line arg
+# Specify the desired volume size in GB as a command line argument. If not specified, default to 100 GiB.
 SIZE=${1:-100}
+
+# Get the ID of the environment host Amazon EC2 instance.
 INSTANCEID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+
+# Get the ID of the Amazon EBS volume associated with the instance.
 VOLUMEID=$(aws ec2 describe-instances \
   --instance-id $INSTANCEID \
   --query "Reservations[0].Instances[0].BlockDeviceMappings[0].Ebs.VolumeId" \
   --output text)
+
+# Resize the EBS volume.
 aws ec2 modify-volume --volume-id $VOLUMEID --size $SIZE
+
+# Wait for the resize to finish.
 while [ \
   "$(aws ec2 describe-volumes-modifications \
     --volume-id $VOLUMEID \
@@ -17,9 +25,14 @@ while [ \
 sleep 1
 done
 
+# check if we're on an NVMe filesystem
 if [ $(readlink -f /dev/xvda) = "/dev/xvda" ]
 then
+  # Rewrite the partition table so that the partition takes up all the space that it can.
   sudo growpart /dev/xvda 1
+
+  # expand the size of the file system.
+  # check if we are on AL2
   STR=$(cat /etc/os-release)
   SUB="VERSION_ID=\"2\""
   if [[ "$STR" == *"$SUB"* ]]
@@ -28,8 +41,13 @@ then
   else
     sudo resize2fs /dev/xvda1
   fi
+
 else
+  # Rewrite the partition table so that the partition takes up all the space that it can.
   sudo growpart /dev/nvme0n1 1
+
+  # expand the size of the file system.
+  # check if we're on AL2
   STR=$(cat /etc/os-release)
   SUB="VERSION_ID=\"2\""
   if [[ "$STR" == *"$SUB"* ]]
