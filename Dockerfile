@@ -1,18 +1,18 @@
-FROM python:3.7.3-stretch
+FROM python:3.14-slim
 
-# create a working directory
 WORKDIR /app
 
-# copy flask application's source code to working directory
-COPY . app.py /app/
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
-# Install packages from requirements.txt
-# hadolint ignore=DL3013
-RUN pip install --upgrade pip &&\
-	    pip install --trusted-host pypi.python.org -r requirements.txt
+# install dependencies;
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# Expose port 80
+COPY app.py .
+COPY model_data/boston_housing_prediction.joblib model_data/
+
 EXPOSE 80
 
-# Run app.py at container launch
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "--workers", "2", "app:app"]

@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# This tags and uploads an image to Docker Hub
+image=janymuong/mlapiscikit:latest
 
-# This is your Docker ID/path
-dockerpath=janymuong/mlapiscikit
+# start minikube if it isn't running
+minikube status >/dev/null 2>&1 || minikube start
 
-# Run the Docker Hub container with kubernetes
+# build locally and load into minikube
+docker build --tag="$image" .
+minikube image rm "$image" >/dev/null 2>&1 || true
+minikube image load "$image"
+
+# recreate the pod; pull policy Never because :latest would otherwise
+# default to Always and fetch the old image from Docker Hub
+kubectl delete pod mlapiscikit --ignore-not-found
 kubectl run mlapiscikit \
-	--image=$dockerpath:latest --port=80
+	--image="$image" --image-pull-policy=Never --port=80
 
-# List kubernetes pods
+# wait until ready, then list pods
+kubectl wait --for=condition=Ready pod/mlapiscikit --timeout=120s
 kubectl get pods
 
-# Forward the container port to a host
-kubectl port-forward mlapiscikit 8000:80
-
-## [this] bash script simulates these manual steps:
-# kubectl run mlapiscikit --image=janymuong/mlapiscikit:latest --port=80
-
-# kubectl get pods
-# kubectl port-forward mlapiscikit 8000:80
+# forward the container port to the host
+kubectl port-forward pod/mlapiscikit 8000:80
