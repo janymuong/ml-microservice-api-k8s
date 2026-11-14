@@ -40,12 +40,15 @@ You can find a detailed [project rubric, here](https://review.udacity.com/#!/rub
 
 `Virtual Environments` - It's recommended to leverage a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virtual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
 
-- Create a siloed virtual environment with Python 3.7 and **activate** it. You should have Python 3.7 available in your host/local machine. 
+- Create a siloed virtual environment with Python and **activate** it. You should have Python available in your host/local machine. 
 Check the Python path using `which python3`
 ```bash
-python3 -m pip install --user virtualenv 
+python -m venv .devops
+
+# OR use virtualenv
+# python3 -m pip install --user virtualenv 
 # use a command similar to this one to create environment:
-python3 -m virtualenv --python=<path-to-python3.7> .devops
+# python3 -m virtualenv --python=<path-to-python3> .devops
 source .devops/bin/activate
 ```
 > Alternatively, you could setup the virtualenv via `make setup`. [this](./Makefile) is from a directive in `Makefile`.
