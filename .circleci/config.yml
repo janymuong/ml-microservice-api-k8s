@@ -12,7 +12,17 @@ jobs:
         working_directory: ~/repo
         
         steps:
-            - checkout
+            - run:
+                name: Checkout code
+                command: |
+                    git clone \
+                        --filter=blob:none \
+                        --branch "$CIRCLE_BRANCH" \
+                        "https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git" \
+                        /tmp/checkout
+                    cp -a /tmp/checkout/. ~/repo/
+                    rm -rf /tmp/checkout
+                    cd ~/repo && git checkout -q "$CIRCLE_SHA1"
             
             # Download and cache dependencies
             - restore_cache:
