@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sleep-staging
+  labels:
+    app: sleep-staging
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sleep-staging
+  template:
+    metadata:
+      labels:
+        app: sleep-staging
+    spec:
+      containers:
+        - name: api
+          image: janymuong/sleep-staging:latest
+          # IfNotPresent: use the image loaded into minikube, else pull from Docker Hub.
+          # (":latest" would otherwise default to Always and ignore the local build.)
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            # One worker per pod: scale by raising `replicas`, not workers, because
+            # every worker holds its own copy of PyTorch in memory.
+            - name: WEB_CONCURRENCY
+              value: "1"
+            - name: TORCH_NUM_THREADS
+              value: "1"
+          # The model is loaded before gunicorn accepts connections, so /healthz only
+          # answers once the pod can really serve predictions.
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          # Starting values, not measured ones: check `kubectl top pod` and adjust.
+          resources:
+            requests:
+              cpu: 250m
+              memory: 384Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi

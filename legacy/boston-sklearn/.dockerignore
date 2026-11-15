@@ -1,0 +1,5 @@
+.devops
+.git
+__pycache__
+*.pyc
+model_data/housing.csv

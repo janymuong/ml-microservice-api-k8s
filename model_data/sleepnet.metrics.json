@@ -1,0 +1,104 @@
+{
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "kappa": 1.0,
+  "epochs": 1440,
+  "per_stage": {
+    "W": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 269
+    },
+    "N1": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 173
+    },
+    "N2": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 467
+    },
+    "N3": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 344
+    },
+    "REM": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 187
+    }
+  },
+  "confusion_matrix": [
+    [
+      269,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      173,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      467,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      344,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      187
+    ]
+  ],
+  "trained_on": "synthetic",
+  "best_epoch": 9,
+  "split": {
+    "train": {
+      "recordings": 18,
+      "subjects": 9,
+      "epochs": 4320
+    },
+    "val": {
+      "recordings": 6,
+      "subjects": 3,
+      "epochs": 1440
+    },
+    "test": {
+      "recordings": 6,
+      "subjects": 3,
+      "epochs": 1440
+    }
+  },
+  "best_val_macro_f1": 1.0,
+  "stages": [
+    "W",
+    "N1",
+    "N2",
+    "N3",
+    "REM"
+  ],
+  "seed": 42,
+  "train_seconds": 93
+}
