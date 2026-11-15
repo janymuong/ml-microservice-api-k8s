@@ -1,16 +1,16 @@
-# Sleep Staging Microservice: PyTorch + Flask + Docker + Kubernetes
+# EEG ML Microservice: PyTorch,  Docker and  Kubernetes
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/janymuong/ml-microservice-api-k8s/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/janymuong/ml-microservice-api-k8s/tree/main)
 
-```Cloud DevOps Engineering```
+```Cloud DevOps Engineering```, ```Sleep Staging```
 
 Operationalizing a machine learning microservice: a PyTorch model behind a Flask API, containerized with Docker and deployed on Kubernetes.
 
 The model reads **one channel of EEG from a night's sleep** and labels every 30-second epoch as Wake, N1, N2, N3 or REM. That gives you a hypnogram (the standard sleep chart) plus the usual report numbers: time asleep, sleep efficiency, sleep latency, REM latency.
 
-> **Research demo, not a medical device.** Do not use it to diagnose or treat anything.
+> **NOTE: not a medical device.** Do not use it to diagnose or treat anything.
 
-> **Read this first: the committed model is a placeholder.** `model_data/sleepnet.pt` was trained on *synthetic* EEG so that the Docker image and the Kubernetes deployment run out of the box. It scores 100% on its synthetic test set, which means nothing about real sleep. `/model`, every `/predict` response and the web page all say `trained_on: synthetic`. To get a real model, download Sleep-EDF and run `python train.py` ([Train on real data](#train-on-real-data)).
+The model, `model_data/sleepnet.pt`, was trained on real recordings from [Sleep-EDF](#the-problem-and-the-data): 39 nights from 20 subjects. On 4 held-out subjects it reaches a Cohen's kappa of **0.78** (see [Results](#results)). `/model`, every `/predict` response and the web page report `trained_on: sleep-edf`. Training on more subjects is the most direct way to improve it ([Train on real data](#train-on-real-data)).
 
 The first version of this project served a scikit-learn model that predicted Boston house prices. That version, unchanged, lives in [legacy/boston-sklearn](./legacy/boston-sklearn). The Docker, Makefile, CI and Kubernetes plumbing was kept and adapted.
 
@@ -38,12 +38,37 @@ At serving time a longer recording is cut into 50%-overlapping windows and the o
 
 ### Results
 
-| | accuracy | macro-F1 | kappa |
-|---|---|---|---|
-| Committed placeholder (synthetic data) | 1.00 | 1.00 | 1.00 |
-| Real Sleep-EDF | *run `python train.py` and paste the numbers from `model_data/sleepnet.metrics.json` here* | | |
+Trained on sleep-cassette subjects 0-19 (39 nights; subject 13 has only one night in the dataset), 25 epochs, about 17 minutes on the author's machine.
 
-Expect N1 to be the weakest stage by far: it is rare and even human scorers disagree on it.
+| split | subjects | recordings | epochs |
+|---|---|---|---|
+| train | 12 | 24 | 25,344 |
+| validation | 4 | 7 | 7,894 |
+| **test** | **4** | **8** | **9,130** |
+
+Test-set scores (best epoch 15, chosen on validation; 9,118 scored epochs):
+
+| accuracy | macro-F1 | Cohen's kappa |
+|---|---|---|
+| 0.838 | 0.789 | **0.778** |
+
+| stage | precision | recall | F1 | test epochs |
+|---|---|---|---|---|
+| W | 0.93 | 0.77 | 0.84 | 1,747 |
+| N1 | 0.45 | 0.51 | 0.47 | 707 |
+| N2 | 0.96 | 0.84 | 0.90 | 4,024 |
+| N3 | 0.83 | 0.97 | 0.90 | 862 |
+| REM | 0.73 | 0.95 | 0.83 | 1,778 |
+
+The confusion matrix and the rest of the run are in [model_data/sleepnet.metrics.json](./model_data/sleepnet.metrics.json).
+
+How to read it:
+
+- A kappa of 0.61-0.80 is conventionally called *substantial* agreement with the human scorers.
+- **N2 and N3 are strong** (F1 0.90). **N1 is the weak stage** (F1 0.47): it is rare (6.6% of training epochs) and even human scorers disagree on it.
+- Recall is very high for N3 and REM but lower for W and N2, so the model leans towards calling things N3, REM or N1 and under-calls W and N2. Likely causes are the extra loss weight on rarer classes and having only one EEG channel: REM, wake and N1 all look like low-amplitude mixed-frequency EEG, and scorers separate them with eye and muscle signals the model never sees.
+- Validation kappa plateaued around 0.81 from about epoch 8, while the test kappa is 0.78. Part of that gap is picking the best epoch on validation, and part is noise: the test set is only 4 subjects, so treat the score as having wide error bars. Repeating the run with different seeds would give a steadier estimate.
+- Training for more epochs on the same data will not help much; more subjects (`./fetch_data.sh model_data/sleep-edf "SC4*"` fetches all 153 recordings) and a second EEG channel are the obvious next steps.
 
 ---
 ## Setup the Environment
@@ -65,11 +90,13 @@ source .devops/bin/activate
 python train.py                 # writes model_data/sleepnet.pt and model_data/sleepnet.metrics.json
 ```
 
-`fetch_data.sh` uses the AWS CLI (no account needed) or `wget`; pass a different glob as the second argument to fetch more or fewer subjects (`./fetch_data.sh model_data/sleep-edf "SC4*"` for all 153 recordings). Training time depends on how many subjects you use, so start small with `python train.py --max-subjects 8 --epochs 10`.
+`fetch_data.sh` uses the AWS CLI (no account needed, and much faster than the `wget` fallback); pass a different glob as the second argument to fetch more or fewer subjects (`./fetch_data.sh model_data/sleep-edf "SC4*"` for all 153 recordings). Training time depends on how many subjects you use, so start small with `python train.py --max-subjects 8 --epochs 10`.
 
-Useful flags: `--channel` (default `EEG Fpz-Cz`), `--epochs`, `--lr`, `--threads`. `python train.py --synthetic 12 --epochs 8 --out /tmp/x.pt` runs the whole pipeline on made-up data in about a minute (a smoke test, not a model).
+Useful flags: `--channel` (default `EEG Fpz-Cz`), `--epochs`, `--lr`, `--threads`. `python train.py --synthetic 12 --epochs 8 --out /tmp/x.pt` runs the whole pipeline on made-up data in about a minute (a smoke test, not a model; the checkpoint it writes says `trained_on: synthetic`).
 
-After training, rebuild the image so the container serves the new checkpoint.
+`trained_on` records the data *source*, not how much of it was used, so a run with `--max-subjects 3` is still labelled `sleep-edf`. Check `sleepnet.metrics.json` for the split sizes and scores.
+
+The checkpoint is loaded when the server starts, so after training, (re)start the server or (re)build the image so the container serves the new checkpoint.
 
 ### Running `app.py`
 
@@ -93,6 +120,8 @@ curl -H "Content-Type: application/json" \
 
 For an `.edf` upload the service picks the channel whose name contains `EEG` (preferring `Fpz`), converts V/mV/uV to microvolts, and uses the file's own sampling rate. Pass `-F channel="EEG Pz-Oz"` to choose another. Any sampling rate is resampled to 100 Hz; at least 30 s of signal is needed.
 
+The shape of the response (the values here are illustrative):
+
 ```json
 {
   "n_epochs": 120, "epoch_seconds": 30,
@@ -103,7 +132,7 @@ For an `.edf` upload the service picks the channel whose name contains `EEG` (pr
     "total_sleep_minutes": 49.5, "time_in_bed_minutes": 60.0, "sleep_efficiency": 0.825,
     "sleep_latency_minutes": 3.5, "rem_latency_minutes": null
   },
-  "trained_on": "synthetic", "latency_ms": 76.2
+  "trained_on": "sleep-edf", "latency_ms": 76.2
 }
 ```
 
@@ -116,9 +145,9 @@ For an `.edf` upload the service picks the channel whose name contains `EEG` (pr
 
 Configuration by environment variable: `MODEL_PATH`, `MAX_UPLOAD_MB` (default 100), `MAX_HOURS` (default 24), `TORCH_NUM_THREADS` (default 1) and, in the container, `WEB_CONCURRENCY` (gunicorn workers, default 2). Uploads are parsed with `allow_pickle=False`, so a malicious `.npy` cannot run code.
 
-`samples/synthetic_night.npy` is an hour of *synthetic* signal (with its true stages in `synthetic_night.stages.json`) so you can try the API without downloading anything. Staging it correctly shows the pipeline works, not that the model works on real sleep.
+`samples/synthetic_night.npy` is an hour of *synthetic* signal (with its made-up stages in `synthetic_night.stages.json`). It is only for checking that the API accepts a file and returns the right shape of response, e.g. in `./make_prediction.sh`. The model was trained on real EEG, so its stages for this synthetic signal mean nothing. To see real behaviour, upload a Sleep-EDF `*-PSG.edf` file, ideally from a subject that was not in the training split.
 
-### Performance notes (measured on 2 CPU cores, demo model)
+### Performance notes (measured on 2 CPU cores)
 
 - A full 8-hour night (960 epochs, a 12 MB upload) is scored in about 0.5 s.
 - Each gunicorn worker held about 700 MB of RAM with the default CUDA PyTorch wheel. The CPU-only wheel in the Dockerfile should be smaller but has not been measured, so check `kubectl top pod`. The Kubernetes manifest runs one worker per pod and scales by replicas.
@@ -152,9 +181,11 @@ These are bash scripts that you can use in place of multiple/chained shell comma
 
 ### `appendix c` - Limitations
 - One EEG channel only. Real scorers also use EOG and EMG, which helps most with REM.
+- The model was trained on 20 of the 78 sleep-cassette subjects and scored on only 4 held-out subjects, so the results above are a rough estimate, not a benchmark.
+- Training trims each night to about 30 minutes of wake before and after sleep, but the API scores whatever you send it. A recording that includes many hours of daytime wake (the raw sleep-cassette files run ~20 hours) may have some of that wake labelled as sleep, so judge it on the sleep period.
 - Sleep-EDF has healthy adults (plus a small temazepam study) recorded in the 1980s-90s with older equipment. Expect worse results on other populations, devices and sleep disorders.
-- The checkpoint in the repo is synthetic (see the top of this file).
+- The output of this is for decision support at most, never a diagnosis.
 
 ---
 ## Credits
-Data: B Kemp, AH Zwinderman, B Tuk, HAC Kamphuisen, JJL Oberyé. *Analysis of a sleep-dependent neuronal feedback loop: the slow-wave microcontinuity of the EEG.* IEEE-BME 47(9):1185-1194 (2000), distributed through [PhysioNet](https://www.physionet.org/content/sleep-edfx/1.0.0/) under the Open Data Commons Attribution License v1.0. Also cite the standard PhysioNet publication given on that page.
+Data: B Kemp, AH Zwinderman, B Tuk, HAC Kamphuisen, JJL Oberyé. *Analysis of a sleep-dependent neuronal feedback loop: the slow-wave microcontinuity of the EEG.* IEEE-BME 47(9):1185-1194 (2000), distributed through [PhysioNet](https://www.physionet.org/content/sleep-edfx/1.0.0/) under the Open Data Commons Attribution License v1.0. and PhysioNet publication given on that page.
