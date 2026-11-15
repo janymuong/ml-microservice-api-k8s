@@ -104,7 +104,7 @@ The checkpoint is loaded when the server starts, so after training, (re)start th
 2. Run in Docker:  `./run_docker.sh`
 3. Run in Kubernetes:  `./run_kubernetes.sh`
 
-The scripts build and run the image `janymuong/sleep-staging` and expose the API on `localhost:8000`.
+The scripts build and run the image `janymuong/eeg-sleep-staging` and expose the API on `localhost:8000`.
 
 ## Using the API
 
