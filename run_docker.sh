@@ -4,10 +4,10 @@ set -euo pipefail
 ## Complete the following steps to get Docker running locally
 
 # Build image and add a descriptive tag
-docker build --tag=janymuong/sleep-staging:latest .
+docker build --tag=janymuong/eeg-sleep-staging:latest .
 
 # list docker images for logging
-docker image ls janymuong/sleep-staging
+docker image ls janymuong/eeg-sleep-staging
 
 # Run flask app (host 8000 -> container 80)
-docker run --rm -p 8000:80 janymuong/sleep-staging:latest
+docker run --rm -p 8000:80 janymuong/eeg-sleep-staging:latest
