@@ -18,7 +18,7 @@ install:
 		pip install -r requirements-dev.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 	# install hadolint for linting in sourced env (.devops)
-	wget -O ./hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+	wget -O ./hadolint https://github.com/hadolint/hadolint/releases/download/v2.15.1/hadolint-linux-x86_64 &&\
 	chmod +x ./hadolint
 
 test:

@@ -13,10 +13,9 @@ ENV PYTHONUNBUFFERED=1 \
     TORCH_NUM_THREADS=1 \
     WEB_CONCURRENCY=2
 
-# install dependencies;
+# install dependencies (this layer is cached until requirements.txt changes)
 COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY app.py .
 COPY sleepnet/ sleepnet/
