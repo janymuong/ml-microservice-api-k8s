@@ -1,97 +1,97 @@
 {
-  "accuracy": 1.0,
-  "macro_f1": 1.0,
-  "kappa": 1.0,
-  "epochs": 1440,
+  "accuracy": 0.8378,
+  "macro_f1": 0.7886,
+  "kappa": 0.7781,
+  "epochs": 9118,
   "per_stage": {
     "W": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "support": 269
+      "precision": 0.9298,
+      "recall": 0.7739,
+      "f1": 0.8447,
+      "support": 1747
     },
     "N1": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "support": 173
+      "precision": 0.4485,
+      "recall": 0.505,
+      "f1": 0.475,
+      "support": 707
     },
     "N2": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "support": 467
+      "precision": 0.958,
+      "recall": 0.8444,
+      "f1": 0.8976,
+      "support": 4024
     },
     "N3": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "support": 344
+      "precision": 0.8342,
+      "recall": 0.9745,
+      "f1": 0.8989,
+      "support": 862
     },
     "REM": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "support": 187
+      "precision": 0.7312,
+      "recall": 0.9516,
+      "f1": 0.827,
+      "support": 1778
     }
   },
   "confusion_matrix": [
     [
-      269,
-      0,
-      0,
-      0,
-      0
+      1352,
+      274,
+      35,
+      6,
+      80
     ],
     [
-      0,
-      173,
-      0,
-      0,
-      0
+      88,
+      357,
+      68,
+      3,
+      191
     ],
     [
-      0,
-      0,
-      467,
-      0,
-      0
-    ],
-    [
-      0,
-      0,
-      0,
-      344,
-      0
+      5,
+      112,
+      3398,
+      158,
+      351
     ],
     [
       0,
       0,
+      22,
+      840,
+      0
+    ],
+    [
+      9,
+      53,
+      24,
       0,
-      0,
-      187
+      1692
     ]
   ],
-  "trained_on": "synthetic",
-  "best_epoch": 9,
+  "trained_on": "sleep-edf",
+  "best_epoch": 15,
   "split": {
     "train": {
-      "recordings": 18,
-      "subjects": 9,
-      "epochs": 4320
+      "recordings": 24,
+      "subjects": 12,
+      "epochs": 25344
     },
     "val": {
-      "recordings": 6,
-      "subjects": 3,
-      "epochs": 1440
+      "recordings": 7,
+      "subjects": 4,
+      "epochs": 7894
     },
     "test": {
-      "recordings": 6,
-      "subjects": 3,
-      "epochs": 1440
+      "recordings": 8,
+      "subjects": 4,
+      "epochs": 9130
     }
   },
-  "best_val_macro_f1": 1.0,
+  "best_val_macro_f1": 0.8174,
   "stages": [
     "W",
     "N1",
@@ -100,5 +100,5 @@
     "REM"
   ],
   "seed": 42,
-  "train_seconds": 93
+  "train_seconds": 1044
 }
