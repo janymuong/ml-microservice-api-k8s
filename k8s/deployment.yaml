@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: janymuong/sleep-staging:latest
+          image: janymuong/eeg-sleep-staging:latest
           # IfNotPresent: use the image loaded into minikube, else pull from Docker Hub.
           # (":latest" would otherwise default to Always and ignore the local build.)
           imagePullPolicy: IfNotPresent
