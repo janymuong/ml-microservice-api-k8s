@@ -15,6 +15,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 # install dependencies;
 COPY requirements.txt .
+# hadolint ignore=DL3013
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
