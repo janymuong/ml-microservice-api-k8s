@@ -1,0 +1,5 @@
+# Everything needed to develop, test and train (the API container installs only requirements.txt)
+-r requirements.txt
+mne>=1.8
+pylint>=4.0
+pytest>=8.0

@@ -2,4 +2,9 @@
 .git
 __pycache__
 *.pyc
-model_data/housing.csv
+.pytest_cache
+legacy
+tests
+samples
+model_data/sleep-edf
+model_data/*.metrics.json

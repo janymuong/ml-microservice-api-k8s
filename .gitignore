@@ -2,3 +2,6 @@ minikube-linux-amd64
 hadolint
 .devops
 ~/.devops
+__pycache__/
+.pytest_cache/
+model_data/sleep-edf/

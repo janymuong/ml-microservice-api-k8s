@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-image=janymuong/mlapiscikit:latest
+image=janymuong/sleep-staging:latest
 
 # start minikube if it isn't running
 minikube status >/dev/null 2>&1 || minikube start
@@ -11,15 +11,14 @@ docker build --tag="$image" .
 minikube image rm "$image" >/dev/null 2>&1 || true
 minikube image load "$image"
 
-# recreate the pod; pull policy Never because :latest would otherwise
-# default to Always and fetch the old image from Docker Hub
-kubectl delete pod mlapiscikit --ignore-not-found
-kubectl run mlapiscikit \
-	--image="$image" --image-pull-policy=Never --port=80
+# create or update the Deployment and Service (manifests live in k8s/)
+kubectl apply -f k8s/
 
-# wait until ready, then list pods
-kubectl wait --for=condition=Ready pod/mlapiscikit --timeout=120s
-kubectl get pods
+# the image tag is always :latest, so applying alone would not replace running pods
+# that already use an older build; restart them to pick up the image just loaded
+kubectl rollout restart deployment/sleep-staging
+kubectl rollout status deployment/sleep-staging --timeout=180s
+kubectl get pods,svc -l app=sleep-staging
 
-# forward the container port to the host
-kubectl port-forward pod/mlapiscikit 8000:80
+# forward the service port to the host
+kubectl port-forward service/sleep-staging 8000:80

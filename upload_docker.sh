@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Docker Hub username and image path (already tagged this way by run_docker.sh)
 dockeruser=janymuong
-dockerpath=$dockeruser/mlapiscikit
+dockerpath=$dockeruser/EEG-ML-sleep-staging
 
 # Fail early if the image hasn't been built
 docker image inspect "$dockerpath:latest" >/dev/null 2>&1 || {
@@ -27,4 +27,4 @@ docker push "$dockerpath:latest"
 
 # this bash script simulates these manual steps:
 # docker login -u janymuong
-# docker push janymuong/mlapiscikit:latest
+# docker push janymuong/EEG-ML-sleep-staging:latest
