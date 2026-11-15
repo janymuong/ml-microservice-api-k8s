@@ -27,4 +27,4 @@ docker push "$dockerpath:latest"
 
 # this bash script simulates these manual steps:
 # docker login -u janymuong
-# docker push janymuong/sleep-staging:latest
+# docker push janymuong/EEG-ML-sleep-staging:latest
